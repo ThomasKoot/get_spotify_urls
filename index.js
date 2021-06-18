@@ -17,12 +17,12 @@ getMultipleInputs(['clientId', 'clientSecret', 'playlistId'], (err, res) => {
 
 function handlePlayListItems(data) {
     const items = data
-    fs.writeFileSync("raw_data.json", JSON.stringify(data))
     const parsedData = items.map(item => {
         const name = item.track.name;
         const url = item.track.external_urls.spotify
         return {name, url}
     })
-    fs.writeFileSync("output.json", JSON.stringify(parsedData))
+    fs.writeFile("output.json", JSON.stringify(parsedData), 
+        () => console.log(`finished, wrote ${items.length} tracks to output.json`))
 }
 
