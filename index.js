@@ -16,7 +16,7 @@ getMultipleInputs(['clientId', 'clientSecret', 'playlistId'], (err, res) => {
 })
 
 function handlePlayListItems(data) {
-    const items = data.tracks.items
+    const items = data
     fs.writeFileSync("raw_data.json", JSON.stringify(data))
     const parsedData = items.map(item => {
         const name = item.track.name;

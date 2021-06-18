@@ -1,11 +1,15 @@
 const https = require("https");
 
 function getPlaylistItems(playlistId) {
-    return function (accessToken, callback) {
+    let nextPath;
+    let tracks = []
+    return function getPlaylistItemsIteration(accessToken, callback) {
         const endpoint = 'api.spotify.com'
-        const queryParams = encodeURI('fields=tracks.items(track(name,external_urls))')
+        const queryParams = encodeURI('fields=offset,next,previous,total,items(track(name,external_urls))')
 
-        const path = `/v1/playlists/${playlistId}?${queryParams}`
+        const path = nextPath ? 
+            nextPath.replace("https://api.spotify.com", "") :
+            `/v1/playlists/${playlistId}/tracks?${queryParams}`
 
         const options = {
             hostname: endpoint,
@@ -31,7 +35,13 @@ function getPlaylistItems(playlistId) {
                 } catch(err) {
                     return callback(err)
                 }
-                return callback(null, parsedResponse)
+                tracks = tracks.concat(parsedResponse.items);
+                if (parsedResponse.next) {
+                    nextPath = parsedResponse.next
+                    return getPlaylistItemsIteration(accessToken, callback)
+                } else {
+                    return callback(null, tracks)
+                }
             });
         })
         req.on("error", callback)
