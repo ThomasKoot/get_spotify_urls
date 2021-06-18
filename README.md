@@ -7,7 +7,7 @@ Run the app by running the "node index" command. You are prompted for a clientId
 
 The output is written to output.json in the project directory. It containes an array of objects with the structure:
 {
-  name: <string>, 
-  url: <string>
- }
+  name: \<string\>, 
+  url: \<string\>
+}
 
